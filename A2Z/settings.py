@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
-    'A2Zbackend'
+    'A2Zbackend',
+    'rest_framework',
+    'djoser',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +132,13 @@ GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY'
 GDAL_LIBRARY_PATH = r'C:/OSGeo4W/bin/gdal307'
 GEOS_LIBRARY_PATH = r'C:/OSGeo4W/bin/geos'
 PROJ_LIBRARY_PATH = r'C:/OSGeo4W64/share/proj'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+   'AUTH_HEADER_TYPES': ('JWT',),
+}
