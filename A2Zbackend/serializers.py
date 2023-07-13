@@ -10,39 +10,37 @@ class AccountsSerializer(serializers.ModelSerializer):
 class AccountTypesSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountTypes
-        fields = ['account_type_id', 'name']
+        fields = '__all__'
 
 class CasesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cases
-        fields = ['case_id', 'dispatch_entry_id', 'csr_id']
+        fields = '__all__'
         
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = ['company_id', 'name', 'phone', 'email', 'address', 'city', 'state', 'pincode',
-                  'country', 'create_date', 'company_type', 'status', 'auth_token',
-                  'monthly_fee', 'notes']
+        fields = '__all__'
         
 class CompanyFeaturesSerializer(serializers.ModelSerializer):
     class Meta:
         model = CompanyFeatures
-        fields = ['company_id', 'company_features_id', 'feature_id', 'name', 'create_date']
+        fields = '__all__'
         
 class CompanyPricingSerializer(serializers.ModelSerializer):
     class Meta:
         model = CompanyPricing
-        fields = ['id', 'rate_item_id', 'default_rate', 'company_id']
+        fields = '__all__'
 
 class CustomersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customers
-        fields = ['customer_id', 'name', 'email', 'phone', 'whatsapp_number']
+        fields = '__all__'
         
 class CustomerFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerFeedback
-        fields = ['id', 'customer_id', 'review', 'rating', 'name', 'phone', 'notes']
+        fields = '__all__'
 
 class DispatchEntryAssetsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,7 +50,7 @@ class DispatchEntryAssetsSerializer(serializers.ModelSerializer):
 class DispatchStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = DispatchStatus
-        fields = ['dispatch_status_id', 'name']
+        fields = '__all__'
         
 class DispatchEntryStatusRecordsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -72,7 +70,7 @@ class DriverLocationSerializer(serializers.ModelSerializer):
 class FeaturesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Features
-        fields = ['feature_id', 'name', 'create_date']
+        fields = '__all__'
         
 class InvoicesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -87,12 +85,12 @@ class PaymentsSerializer(serializers.ModelSerializer):
 class RateItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = RateItem
-        fields = ['name', 'account_id', 'account_name', 'create_date']
+        fields = '__all__'
         
 class ReasonsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reasons
-        fields = ['reason_id', 'name', 'create_date', 'service_type']
+        fields = '__all__'
         
 # class ServiceProviderSerializer(serializers.ModelSerializer):
 #     class Meta:
@@ -102,17 +100,17 @@ class ReasonsSerializer(serializers.ModelSerializer):
 class ServiceTypesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceTypes
-        fields = ['service_type_id', 'service', 'service_type']
+        fields = '__all__'
         
 class SystemUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = SystemUser
-        fields = ['csr_id', 'name', 'create_date', 'role', 'role_id', 'status']
+        fields = '__all__'
         
 class SystemUserStatusRecordsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SystemUserStatusRecords
-        fields = ['id', 'dispatch_entry_id', 'previous_csr_id', 'new_csr_id', 'create_date']
+        fields = '__all__'
         
 # class UserSerializer(serializers.ModelSerializer):
 #     class Meta(object):
@@ -122,4 +120,4 @@ class SystemUserStatusRecordsSerializer(serializers.ModelSerializer):
 class VehiclesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vehicles
-        fields = ['vehicle_id', 'make_id', 'make', 'model_id', 'model', 'year', 'vehicle_class', 'vehicle_type']
+        fields = '__all__'
