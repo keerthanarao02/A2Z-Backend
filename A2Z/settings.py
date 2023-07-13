@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'A2Zbackend',
     'rest_framework',
     'djoser',
-    'rest_framework.authtoken',
+    # 'rest_framework.authtoken',
     'corsheaders',
 ]
 

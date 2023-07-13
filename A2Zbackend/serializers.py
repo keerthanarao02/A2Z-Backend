@@ -114,10 +114,10 @@ class SystemUserStatusRecordsSerializer(serializers.ModelSerializer):
         model = SystemUserStatusRecords
         fields = ['id', 'dispatch_entry_id', 'previous_csr_id', 'new_csr_id', 'create_date']
         
-class UserSerializer(serializers.ModelSerializer):
-    class Meta(object):
-        model = User 
-        fields = ['id', 'username', 'password', 'email']
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta(object):
+#         model = User 
+#         fields = ['id', 'username', 'password', 'email']
 
 class VehiclesSerializer(serializers.ModelSerializer):
     class Meta:

@@ -15,23 +15,6 @@ from rest_framework.permissions import IsAuthenticated
 # from django.contrib.gis.measure import D
 
 
-@api_view(['POST'])
-def login_view(request):
-    username = request.data.get('username')
-    password = request.data.get('password')
-
-    user = authenticate(request, username=username, password=password)
-    if user is not None:
-        login(request, user)
-        token, _ = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key})
-    else:
-        return Response({'error': 'Invalid credentials'}, status=401)
-
-@api_view(['POST'])
-def logout_view(request):
-    logout(request)
-    return Response({'success': 'Logged out successfully'})
 
 @api_view(['POST'])
 def create_dispatch_entry(request):
@@ -911,34 +894,7 @@ def user_status_records_detail(request, record_id):
         user_status_record.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)    
 
-# User API
-@api_view(['POST'])
-def login(request):
-    user = get_object_or_404(User, username=request.data['username'])
-    if not user.check_password(request.data['password']):
-        return Response("missing user", status=status.HTTP_404_NOT_FOUND)
-    token, created = Token.objects.get_or_create(user=user)
-    serializer = UserSerializer(user)
-    return Response({'token': token.key, 'user': serializer.data})
-    
 
-@api_view(['POST'])
-def signup(request):
-    serializer = UserSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        user = User.objects.get(username=request.data['username'])
-        user.set_password(request.data['password'])
-        user.save()
-        token = Token.objects.create(user=user)
-        return Response({'token': token.key, 'user': serializer.data})
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@api_view(['GET'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def test_token(request):
-    return Response("passed! for {}".format(request.user.email))
 
 ## Vehicles API
 @api_view(['GET', 'POST'])
