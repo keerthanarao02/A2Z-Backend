@@ -37,13 +37,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.gis',
+    #'django.contrib.gis',
     'A2Zbackend',
     'rest_framework',
     'djoser',
+    'rest_framework.authtoken',
+    'corsheaders',
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -79,7 +84,7 @@ WSGI_APPLICATION = 'A2Z.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'A2Z',
         'USER': 'postgres',
         'PASSWORD': 'abc@123',
@@ -129,9 +134,9 @@ STATIC_URL = '/static/'
 
 GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY'
 
-GDAL_LIBRARY_PATH = r'C:/OSGeo4W/bin/gdal307'
-GEOS_LIBRARY_PATH = r'C:/OSGeo4W/bin/geos'
-PROJ_LIBRARY_PATH = r'C:/OSGeo4W64/share/proj'
+# GDAL_LIBRARY_PATH = r'C:/OSGeo4W/bin/gdal307'
+# GEOS_LIBRARY_PATH = r'C:/OSGeo4W/bin/geos'
+# PROJ_LIBRARY_PATH = r'C:/OSGeo4W64/share/proj'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -142,3 +147,5 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
 }
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -1,11 +1,12 @@
-from django.urls import path, include
+from django.urls import path
 from A2Zbackend import views
 from .views import *
+from django.urls import re_path
 
 app_name = 'A2Zbackend'
 urlpatterns = [
-    path('customers/', views.create_customer),
-    path('create_service/', views.create_service),
+    # path('create-customers/', views.create_customer),
+    # path('create-service/', views.create_service),
     
     path('create-dispatch-entry/', views.create_dispatch_entry),
     
@@ -82,6 +83,10 @@ urlpatterns = [
     
     path('vehicles/', views.vehicles_list),
     path('vehicles/<int:vehicle_id>/', views.vehicles_detail),
+    
+    re_path('login',views.login),
+    re_path('signup',views.signup),
+    re_path('test_token',views.test_token),
 ]
 
 

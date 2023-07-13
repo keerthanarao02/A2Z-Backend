@@ -5,91 +5,33 @@ from django.http import JsonResponse
 from .models import *
 from rest_framework import status
 from .serializers import *
-import googlemaps
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+# import googlemaps
 # from django.conf import settings
 # from django.contrib.gis.geos import Point
 # from django.contrib.gis.measure import D
 
-@api_view(['POST'])
-def create_customer(request):
-    name = request.data.get('name')
-    email = request.data.get('email')
-    phone_number = request.data.get('phone_number')
-    whatsapp_number = request.data.get('whatsapp_number')
-
-    if not all([name, email, phone_number, whatsapp_number]):
-        return Response({'error': 'Missing required fields'}, status=400)
-
-    customer = Customers(
-        name=name,
-        email=email,
-        phone_number=phone_number,
-        whatsapp_number=whatsapp_number
-    )
-    customer.save()
-
-    return Response({'message': 'Customer created successfully'}, status=201)
 
 @api_view(['POST'])
-def create_service(request):
-    service_type = request.data.get('service_type')
-    name = request.data.get('name')
+def login_view(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
 
-    if not all([service_type, name]):
-        return Response({'error': 'Missing required fields'}, status=400)
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        token, _ = Token.objects.get_or_create(user=user)
+        return Response({'token': token.key})
+    else:
+        return Response({'error': 'Invalid credentials'}, status=401)
 
-    service = ServiceTypes(service_type=service_type, name=name)
-    service.save()
-
-    return Response({'message': 'Service created successfully'}, status=201)
-
-
-# @csrf_exempt
-# def create_dispatch_entry(request):
-#     if request.method == 'POST':
-#         data = request.POST
-
-#         service_id = data.get('service.serviceId')
-#         customer_id = data.get('Customer Partner.id')
-#         customer_name = data.get('CustomerInfo.name')
-#         phone = data.get('CustomerInfo.phone')
-#         email = data.get('CustomerInfo.email')
-#         device = data.get('CustomerInfo.device')
-#         street = data.get('location.street')
-#         city = data.get('location.city')
-#         state = data.get('location.state')
-#         zip_code = data.get('location.zip')
-#         longitude = data.get('location.longitude')
-#         latitude = data.get('location.latitude')
-#         address = data.get('location.address')
-#         make = data.get('make')
-#         model = data.get('model')
-#         color = data.get('color')
-#         year = data.get('year')
-#         price = data.get('jobInfo.price')
-
-#         dispatch_entry = DispatchEntry.objects.create(
-#             service_id=service_id,
-#             customer_id=customer_id,
-#             customer_name=customer_name,
-#             phone=phone,
-#             email=email,
-#             device=device,
-#             street=street,
-#             city=city,
-#             state=state,
-#             zip_code=zip_code,
-#             longitude=longitude,
-#             latitude=latitude,
-#             address=address,
-#             make=make,
-#             model=model,
-#             color=color,
-#             year=year,
-#             price=price
-#         )
-#         return JsonResponse({'message': 'DispatchEntry created successfully.'}, status=201)
-#     return JsonResponse({'error': 'Invalid request method.'}, status=400)
+@api_view(['POST'])
+def logout_view(request):
+    logout(request)
+    return Response({'success': 'Logged out successfully'})
 
 @api_view(['POST'])
 def create_dispatch_entry(request):
@@ -969,6 +911,35 @@ def user_status_records_detail(request, record_id):
         user_status_record.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)    
 
+# User API
+@api_view(['POST'])
+def login(request):
+    user = get_object_or_404(User, username=request.data['username'])
+    if not user.check_password(request.data['password']):
+        return Response("missing user", status=status.HTTP_404_NOT_FOUND)
+    token, created = Token.objects.get_or_create(user=user)
+    serializer = UserSerializer(user)
+    return Response({'token': token.key, 'user': serializer.data})
+    
+
+@api_view(['POST'])
+def signup(request):
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        user = User.objects.get(username=request.data['username'])
+        user.set_password(request.data['password'])
+        user.save()
+        token = Token.objects.create(user=user)
+        return Response({'token': token.key, 'user': serializer.data})
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def test_token(request):
+    return Response("passed! for {}".format(request.user.email))
+
 ## Vehicles API
 @api_view(['GET', 'POST'])
 def vehicles_list(request):
@@ -1005,3 +976,85 @@ def vehicles_detail(request, vehicle_id):
     elif request.method == 'DELETE':
         vehicle.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
+# @api_view(['POST'])
+# def create_customer(request):
+#     name = request.data.get('name')
+#     email = request.data.get('email')
+#     phone_number = request.data.get('phone_number')
+#     whatsapp_number = request.data.get('whatsapp_number')
+
+#     if not all([name, email, phone_number, whatsapp_number]):
+#         return Response({'error': 'Missing required fields'}, status=400)
+
+#     customer = Customers(
+#         name=name,
+#         email=email,
+#         phone_number=phone_number,
+#         whatsapp_number=whatsapp_number
+#     )
+#     customer.save()
+
+#     return Response({'message': 'Customer created successfully'}, status=201)
+
+# @api_view(['POST'])
+# def create_service(request):
+#     service_type = request.data.get('service_type')
+#     name = request.data.get('name')
+
+#     if not all([service_type, name]):
+#         return Response({'error': 'Missing required fields'}, status=400)
+
+#     service = ServiceTypes(service_type=service_type, name=name)
+#     service.save()
+
+#     return Response({'message': 'Service created successfully'}, status=201)
+
+
+# @csrf_exempt
+# def create_dispatch_entry(request):
+#     if request.method == 'POST':
+#         data = request.POST
+
+#         service_id = data.get('service.serviceId')
+#         customer_id = data.get('Customer Partner.id')
+#         customer_name = data.get('CustomerInfo.name')
+#         phone = data.get('CustomerInfo.phone')
+#         email = data.get('CustomerInfo.email')
+#         device = data.get('CustomerInfo.device')
+#         street = data.get('location.street')
+#         city = data.get('location.city')
+#         state = data.get('location.state')
+#         zip_code = data.get('location.zip')
+#         longitude = data.get('location.longitude')
+#         latitude = data.get('location.latitude')
+#         address = data.get('location.address')
+#         make = data.get('make')
+#         model = data.get('model')
+#         color = data.get('color')
+#         year = data.get('year')
+#         price = data.get('jobInfo.price')
+
+#         dispatch_entry = DispatchEntry.objects.create(
+#             service_id=service_id,
+#             customer_id=customer_id,
+#             customer_name=customer_name,
+#             phone=phone,
+#             email=email,
+#             device=device,
+#             street=street,
+#             city=city,
+#             state=state,
+#             zip_code=zip_code,
+#             longitude=longitude,
+#             latitude=latitude,
+#             address=address,
+#             make=make,
+#             model=model,
+#             color=color,
+#             year=year,
+#             price=price
+#         )
+#         return JsonResponse({'message': 'DispatchEntry created successfully.'}, status=201)
+#     return JsonResponse({'error': 'Invalid request method.'}, status=400)

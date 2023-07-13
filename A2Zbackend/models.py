@@ -37,7 +37,7 @@ class Company(models.Model):
     is_deleted = models.BooleanField()
     monthly_fee = models.FloatField()
     notes = models.TextField()
-    free_trial_date_left = models.DateField()
+    #free_trial_date_left = models.DateField()
     latitude = models.FloatField()
     longitude = models.FloatField()
 
@@ -209,6 +209,12 @@ class SystemUserStatusRecords(models.Model):
     previous_csr_id = models.IntegerField()
     new_csr_id=models.IntegerField()
     create_date = models.DateField()
+    
+class User(models.Model):
+    id = models.CharField(max_length=255)
+    username = models.CharField(primary_key=True,max_length=255)
+    password = models.CharField(max_length=255)
+    email = models.EmailField()
     
 class Vehicles(models.Model):
     vehicle_id = models.AutoField(primary_key=True)

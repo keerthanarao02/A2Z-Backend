@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from django.contrib.auth.models import User
 
 class AccountsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,7 +10,7 @@ class AccountsSerializer(serializers.ModelSerializer):
 class AccountTypesSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountTypes
-        fields = ['account_type_id', 'name', 'create_date']
+        fields = ['account_type_id', 'name']
 
 class CasesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -86,7 +87,7 @@ class PaymentsSerializer(serializers.ModelSerializer):
 class RateItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = RateItem
-        fields = '__all__'
+        fields = ['name', 'account_id', 'account_name', 'create_date']
         
 class ReasonsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -113,6 +114,11 @@ class SystemUserStatusRecordsSerializer(serializers.ModelSerializer):
         model = SystemUserStatusRecords
         fields = ['id', 'dispatch_entry_id', 'previous_csr_id', 'new_csr_id', 'create_date']
         
+class UserSerializer(serializers.ModelSerializer):
+    class Meta(object):
+        model = User 
+        fields = ['id', 'username', 'password', 'email']
+
 class VehiclesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vehicles
