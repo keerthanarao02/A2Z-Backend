@@ -99,3 +99,9 @@ GET, POST:
     vehicle_class
     vehicle_type
 }
+
+drivers/nearby/?pickup_latitude=<PICKUP_LATITUDE>&pickup_longitude=<PICKUP_LONGITUDE>
+{
+    pickup_latitude,
+    pickup_longitude
+}

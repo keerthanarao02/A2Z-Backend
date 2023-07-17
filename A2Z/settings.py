@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'django.contrib.gis',
     'A2Zbackend',
     'rest_framework',
     'djoser',
@@ -133,10 +132,6 @@ USE_L10N = True
 STATIC_URL = '/static/'
 
 GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY'
-
-# GDAL_LIBRARY_PATH = r'C:/OSGeo4W/bin/gdal307'
-# GEOS_LIBRARY_PATH = r'C:/OSGeo4W/bin/geos'
-# PROJ_LIBRARY_PATH = r'C:/OSGeo4W64/share/proj'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

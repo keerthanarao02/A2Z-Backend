@@ -5,14 +5,8 @@ from django.http import JsonResponse
 from .models import *
 from rest_framework import status
 from .serializers import *
-from django.shortcuts import get_object_or_404
-from rest_framework.decorators import authentication_classes, permission_classes
-from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
-# import googlemaps
-# from django.conf import settings
-# from django.contrib.gis.geos import Point
-# from django.contrib.gis.measure import D
+import googlemaps
+from django.conf import settings
 
 
 
@@ -51,22 +45,6 @@ def create_dispatch_entry(request):
         "jobInfo": {"price": job_price}
     }
     return Response(response_data)
-
-# @api_view(['GET'])
-# def nearby_drivers_api(request):
-#     pickup_latitude = request.query_params.get('pickup_latitude')
-#     pickup_longitude = request.query_params.get('pickup_longitude')
-
-#     if pickup_latitude and pickup_longitude:
-#         gmaps = googlemaps.Client(key=settings.GOOGLE_MAPS_API_KEY)
-#         pickup_location = Point(float(pickup_longitude), float(pickup_latitude), srid=4326)
-#         nearby_drivers = DriverLocation.objects.filter(
-#             location__distance_lte=(pickup_location, D(km=2))
-#         ).values('latitude', 'longitude')
-
-#         return Response(nearby_drivers)
-
-#     return Response({'error': 'pickup_latitude and pickup_longitude parameters are required.'})
 
 ## Accounts API
 @api_view(['GET', 'POST'])
@@ -933,6 +911,25 @@ def vehicles_detail(request, vehicle_id):
         vehicle.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
+@api_view(['GET'])
+def nearby_drivers(request):
+    pickup_latitude = request.GET.get('pickup_latitude')
+    pickup_longitude = request.GET.get('pickup_longitude')
+    distance = 2
+    if pickup_latitude and pickup_longitude:
+        gmaps = googlemaps.Client(key=settings.GOOGLE_MAPS_API_KEY)
+        
+        range_value = float(distance) / (111 * 1000)
+        
+        nearby_drivers = DriverLocation.objects.filter(
+            latitude__range=(float(pickup_latitude)-range_value, float(pickup_latitude)+0.045),
+            longitude__range=(float(pickup_longitude)-range_value, float(pickup_longitude)+0.045)
+        )
+
+        serializer = DriverLocationSerializer(nearby_drivers, many=True)
+        return Response(serializer.data)
+
+    return Response([])
     
 # @api_view(['POST'])
 # def create_customer(request):

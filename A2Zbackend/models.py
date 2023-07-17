@@ -131,7 +131,7 @@ class DriverLocation(models.Model):
     company_id = models.ForeignKey('Company', on_delete=models.CASCADE)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    client_version_id = models.IntegerField()
+    # client_version_id = models.IntegerField()
     company_id = models.ForeignKey('Company', on_delete=models.CASCADE)
 
 class Features(models.Model):
