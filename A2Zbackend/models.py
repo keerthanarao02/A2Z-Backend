@@ -9,6 +9,14 @@ class Accounts(models.Model):
     phone = models.CharField(max_length=100)
     # alternate_phone = models.CharField(max_length=100)
     account_type = models.CharField(max_length=100)
+     def save(self, *args, **kwargs):
+        if not self.account_id:
+            last_account = Accounts.objects.order_by('-account_id').first()
+            if last_account:
+                self.account_id = last_account.account_id + 1
+            else:
+                self.account_id = 1
+        super(Accounts, self).save(*args, **kwargs)
 
 class AccountTypes(models.Model):
     account_type_id = models.IntegerField(primary_key=True)
@@ -219,3 +227,11 @@ class Vehicles(models.Model):
     # year = models.IntegerField()
     vehicle_class = models.CharField(max_length=100)
     vehicle_type = models.IntegerField()
+    def save(self, *args, **kwargs):
+        if not self.vehicle_id:
+            last_vehicle = Vehicles.objects.order_by('-vehicle_id').first()
+            if last_vehicle:
+                self.vehicle_id = last_vehicle.vehicle_id + 1
+            else:
+                self.vehicle_id = 1
+        super(Vehicles, self).save(*args, **kwargs)
