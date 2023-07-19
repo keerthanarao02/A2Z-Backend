@@ -3,7 +3,7 @@ from django.db import models
 class Accounts(models.Model):
     account_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
-    create_date = models.DateField()
+    create_date = models.DateField(auto_now_add=True)
     address = models.CharField(max_length=100)
     email = models.EmailField()
     phone = models.CharField(max_length=100)
@@ -73,7 +73,7 @@ class CustomerFeedback(models.Model):
 class DispatchEntry(models.Model):
     dispatch_entry_id = models.AutoField(primary_key=True)
     case = models.ForeignKey('Cases', on_delete=models.CASCADE)
-    create_date = models.DateField()
+    create_date = models.DateField(auto_now_add=True)
     partner_caseid = models.IntegerField()
     partner_service_id = models.IntegerField()
     account_id = models.ForeignKey('Accounts', on_delete=models.CASCADE)
