@@ -228,3 +228,12 @@ class Vehicles(models.Model):
     # year = models.IntegerField()
     vehicle_class = models.CharField(max_length=100)
     vehicle_type = models.IntegerField()
+     def save(self, *args, **kwargs):
+        if not self.vehicle_id:
+            last_vehicle = Vehicles.objects.order_by('-vehicle_id').first()
+            if last_vehicle:
+                self.vehicle_id = last_vehicle.vehicle_id + 1
+            else:
+                self.vehicle_id = 1
+        super(Vehicles, self).save(*args, **kwargs)
+
